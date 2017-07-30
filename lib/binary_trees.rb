@@ -66,3 +66,12 @@ def has_path_sum(root, sum)
   end
   false
 end
+
+def build_binary_tree(values)
+  nodes = values.map { |value| Node.new(value) }
+  nodes.each_with_index do |node, idx|
+    parent = nodes[(idx-1)/2]
+    idx.odd? ? parent.left = node : parent.right = node
+  end
+  nodes.first
+end
