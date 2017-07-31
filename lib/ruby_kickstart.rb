@@ -242,3 +242,71 @@ end
 def spiral_access(two_d, &block)
   Square.new(two_d).spiral_access(&block)
 end
+
+# Write a method named every_other_char for strings that,
+# returns a string containing every other character
+#
+# example:
+# "abcdefg".every_other_char  # => "aceg"
+# "".every_other_char         # => ""
+
+class String
+  def every_other_char
+    split("").each_slice(2).map { |chars| chars.first }.join
+  end
+end
+
+# Write a method named get_squares that takes an array of numbers
+# and returns a sorted array containing only the numbers whose square is also in the array
+#
+# get_squares [9]                      # => []
+# get_squares [9,3]                    # => [3]
+# get_squares [9,3,81]                 # => [3, 9]
+# get_squares [25, 4, 9, 6, 50, 16, 5] # => [4, 5]
+
+# This time you will have to define the method, it's called: get_squares
+def get_squares(array)
+  array.select {|num| array.include?(num**2) }.sort
+end
+
+# Write a function named mod_three which takes an array of numbers,
+# and return a new array consisting of their remainder when divided by three.
+# Exclude any numbers which are actually divisible by three.
+#
+# EXAMPLES:
+# mod_three [0]  # => []
+# mod_three [1]  # => [1]
+# mod_three [2]  # => [2]
+# mod_three [3]  # => []
+# mod_three [4]  # => [1]
+# mod_three [5]  # => [2]
+# mod_three [6]  # => []
+# mod_three [7]  # => [1]
+#
+# mod_three [0,1,2,3,4,5,6,7] # => [1, 2, 1, 2, 1]
+
+def mod_three(array)
+  array.inject([]) do |memo, num|
+    rem = num % 3
+    memo << rem unless rem == 0
+    memo
+  end
+end
+
+# Given an array of elements, return true if any element shows up three times in a row
+#
+# Examples:
+# got_three? [1, 2, 2, 2, 3]  # => true
+# got_three? ['a', 'a', 'b']  # => false
+# got_three? ['a', 'a', 'a']  # => true
+# got_three? [1, 2, 1, 1]     # => false
+
+class Array
+  def all_same?
+    uniq.size == 1
+  end
+end
+
+def got_three?(array)
+  array.each_cons(3).any?(&:all_same?)
+end

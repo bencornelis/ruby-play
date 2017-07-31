@@ -100,3 +100,42 @@ describe "spiral_access" do
     ).to eq [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
   end
 end
+
+describe "String#every_other_char" do
+  it "meets the problem requirements" do
+    expect("abcdefg".every_other_char).to eq "aceg"
+    expect("".every_other_char).to eq ""
+  end
+end
+
+describe "get_squares" do
+  it "meets the problem requirements" do
+    expect(get_squares([9])).to eq []
+    expect(get_squares([9,3])).to eq [3]
+    expect(get_squares([9,3,81])).to eq [3,9]
+    expect(get_squares([25, 4, 9, 6, 50, 16, 5])).to eq [4,5]
+  end
+end
+
+describe "mod_three" do
+  it "meets the problem requirements" do
+    expect(mod_three([0])).to eq []
+    expect(mod_three([1])).to eq [1]
+    expect(mod_three([2])).to eq [2]
+    expect(mod_three([3])).to eq []
+    expect(mod_three([4])).to eq [1]
+    expect(mod_three([5])).to eq [2]
+    expect(mod_three([6])).to eq []
+    expect(mod_three([7])).to eq [1]
+    expect(mod_three([0,1,2,3,4,5,6,7])).to eq [1, 2, 1, 2, 1]
+  end
+end
+
+describe "got_three?" do
+  it "meets the problem requirements" do
+    expect(got_three?([1, 2, 2, 2, 3])).to eq true
+    expect(got_three?(['a', 'a', 'b'])).to eq false
+    expect(got_three?(['a', 'a', 'a'])).to eq true
+    expect(got_three?([1, 2, 1, 1])).to eq false
+  end
+end

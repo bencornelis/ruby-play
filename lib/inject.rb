@@ -11,6 +11,31 @@ nums.each_with_index.inject(0) do |max_idx, (num, idx)|
 end
 # => 5
 
+# build a hash from array of key-value pairs
+pairs = [["a", 1], ["b", 2], ["c", 3]]
+pairs.inject({}) do |h, (k, v)|
+  h[k] = v
+  h
+end
+
+# get all even integers in array as string
+# using select and map
+nums = [1, 2, 3, 4, 5, 6]
+nums.select(&:even?).map(&:to_s)
+# using inject
+nums.inject([]) do |memo, num|
+  memo << num.to_s if num.even?
+  memo
+end
+
+# Write code that splits a given array of integers into two arrays;
+# the first containing odd numbers and second containing even numbers
+nums = [1, 2, 3, 4, 5, 6]
+nums.inject({even:[], odd:[]}) do |h, num|
+  h[num.even? ? :even : :odd] << num
+  h
+end
+
 # implement some Enumerable methods using inject instead of each
 module MyEnumerable
   def inject(init, &block)
