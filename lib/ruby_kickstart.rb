@@ -256,6 +256,14 @@ class String
   end
 end
 
+# class String
+#   def every_other_char
+#     split("").each_slice(2).inject("") do |str, chars|
+#       str += chars.first
+#     end
+#   end
+# end
+
 # Write a method named get_squares that takes an array of numbers
 # and returns a sorted array containing only the numbers whose square is also in the array
 #

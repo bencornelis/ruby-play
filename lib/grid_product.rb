@@ -1,7 +1,13 @@
 def largest_product(grid)
-  [*horizontals(grid),
-   *horizontals(grid.transpose),
-   *diagonals(grid)].map { |four| four.reduce(:*) }.max
+  [
+    *horizontals(grid),
+    *verticals(grid),
+    *diagonals(grid)
+  ].map { |four| four.reduce(:*) }.max
+end
+
+def verticals(grid)
+  horizontals(grid.transpose)
 end
 
 def horizontals(grid)
