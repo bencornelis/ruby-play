@@ -318,3 +318,105 @@ end
 def got_three?(array)
   array.each_cons(3).any?(&:all_same?)
 end
+
+# Lets represent a file system with hashes
+# You will be passed a hash table, whose keys represent folders.
+# Their values will either be arrays of filenames in that directory
+# or they will be hashes with the same rules (a treelike structure)
+#
+# Your job is to take the hashes, and return an array containing
+# all of the complete file paths where each directory is separated by a '/'
+#
+# HINT:
+#   [1,2,3].is_a? Array # => true
+#   [1,2,3].is_a? Hash  # => false
+#   {1=>1}.is_a?  Array # => false
+#   {1=>1}.is_a?  Hash  # => true
+#
+# HINT2:
+#   Don't feel constrained, you may create any methods, classes, etc, that
+#   you need to you may address the problem in any way you need to (I
+#   haven't tried it yet, but will probably use a recursive approach)
+#
+# EXAMPLES:
+#
+# pathify 'usr' => {'bin' => ['ruby'] }                                                        # => ['/usr/bin/ruby']
+# pathify 'usr' => {'bin' => ['ruby', 'perl'] }                                                # => ['/usr/bin/ruby', '/usr/bin/perl']
+# pathify 'usr' => {'bin' => ['ruby'], 'include' => ['zlib.h'] }                               # => ['/usr/bin/ruby', '/usr/include/zlib.h']
+# pathify 'usr' => {'bin' => ['ruby']}, 'opt' => {'local' => {'bin' => ['sqlite3', 'rsync']} } # => ['/usr/bin/ruby', 'opt/local/bin/sqlite3', 'opt/local/bin/rsync']
+# pathify                                                                                      # => []
+#
+# {'bin' => ['ruby', 'perl'], 'usr' => ['foo', 'bar'] }
+# create it from scratch :)
+
+def pathify(h)
+  return h if h.is_a? Array
+  h.flat_map do |k, v|
+    pathify(v).map { |path| "#{'/' if k == 'usr'}#{k}/#{path}" }
+  end
+end
+
+# Write a method, match_maker, which will receive an unknown number of
+# elements, and return an array where every two elements are represented by true or false.
+#
+# The very first parameter will not be part of this set. Instead, it will tell
+# you how to determine what their value should be.
+# If it is true, then they will be true when they are oppositely truthy.
+# If it is false, then they will be true when they are similarly truthy.
+#
+# Examples:
+# match_maker false, true,  true                # => [true]
+# match_maker true,  true,  true                # => [false]
+# match_maker true,  false, false               # => [false]
+# match_maker true,  false, true                # => [true]
+# match_maker true,  true,  false               # => [true]
+# match_maker true,  true,  true, false, true   # => [false, true]
+# match_maker true,  true,  true, false, nil    # => [false, false]
+# match_maker true,  true,  true, true, nil     # => [false, true]
+# match_maker true,  true,  true, 0, nil        # => [false, true]
+
+def match_maker(op, *args)
+  args.each_slice(2).map do |x, y|
+    truthy_val = op ? (x && !y) || (!x && y) : (x && y) || (!x && !y)
+    !!truthy_val
+  end
+end
+
+# Write a function which takes two arrays, a, and b
+# it should then find the elements that are in both (union)
+#
+# This is the same as [1,2,3] & [1,2,4]
+# but we don't want to use the builtin method
+# instead, implement your own by creating a hash table of elements from the first set
+# and checking it against the elements from the second set
+#
+# the keys will be the elements in the arrays
+# each value will be a two element array, where the first index is true if the
+# key is in a, and the second is true if the key is in b
+# if an index is not true, it should be nil
+#
+# return the hash, and the array of elements in both sets (it should be sorted)
+# (do not worry about the order of the hash, remember, on 1.8, hashes have no ordering)
+#
+# hints:
+#   you can set up default behaviour for a hash by passing a block, see cheatsheet (essentially a lazy initialization)
+#   you can get an array of keys from a hash with the keys method
+#
+# examples:
+#
+# shared [1,2,3], [1,2,4]            # => [{1=>[true, true], 2=>[true, true], 3=>[true, nil], 4=>[nil, true]}, [1, 2]]
+# shared %w(a b c d), %w(aa b cc d)  # => [{"a"=>[true, nil], "b"=>[true, true], "c"=>[true, nil], "d"=>[true, true], "aa"=>[nil, true], "cc"=>[nil, true]}, ["b", "d"]]
+# shared [], [1,2]                   # => [{1=>[nil, true], 2=>[nil, true]}, []]
+# shared [1,2], []                   # => [{1=>[true, nil], 2=>[true, nil]}, []]
+# shared [], []                      # => [{}, []]
+# shared [1,2,:c], ['a','b',:c]      # => [{1=>[true, nil], 2=>[true, nil], :c=>[true, true], "a"=>[nil, true], "b"=>[nil, true]}, [:c]]
+# shared [1,2,3], [3,2,1]            # => [{1=>[true, true], 2=>[true, true], 3=>[true, true]}, [1, 2, 3]]
+
+def shared(a, b)
+  h = Hash.new { |h, k| h[k] = [nil]*2 }
+  [a, b].each_with_index do |array, i|
+    array.each { |el| h[el][i] = true }
+  end
+  shared_values = h.keys.select { |k| h[k].all? }
+  [h, shared_values]
+end

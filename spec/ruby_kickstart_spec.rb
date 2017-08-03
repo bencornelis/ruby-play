@@ -139,3 +139,40 @@ describe "got_three?" do
     expect(got_three?([1, 2, 1, 1])).to eq false
   end
 end
+
+describe "pathify" do
+  it "meets the problem requirements" do
+    expect(pathify('usr' => { 'bin' => ['ruby'] })).to eq ['/usr/bin/ruby']
+    expect(pathify('usr' => {'bin' => ['ruby', 'perl'] })).to eq ['/usr/bin/ruby', '/usr/bin/perl']
+    expect(pathify('usr' => {'bin' => ['ruby'], 'include' => ['zlib.h'] })).to eq ['/usr/bin/ruby', '/usr/include/zlib.h']
+    expect(pathify('usr' => {'bin' => ['ruby']}, 'opt' => {'local' => {'bin' => ['sqlite3', 'rsync']} })).to eq ['/usr/bin/ruby', 'opt/local/bin/sqlite3', 'opt/local/bin/rsync']
+  end
+end
+
+describe "match_maker" do
+  it "meets the problem requirements" do
+    expect(match_maker(false, true,  true)).to eq               [true]
+    expect(match_maker(false, false,  false)).to eq             [true]
+    expect(match_maker(false, true,  false)).to eq              [false]
+    expect(match_maker(true,  true,  true)).to eq               [false]
+    expect(match_maker(true,  false, false)).to eq              [false]
+    expect(match_maker(true,  false, true)).to eq               [true]
+    expect(match_maker(true,  true,  false)).to eq              [true]
+    expect(match_maker(true,  true,  true, false, true)).to eq  [false, true]
+    expect(match_maker(true,  true,  true, false, nil)).to eq   [false, false]
+    expect(match_maker(true,  true,  true, true, nil)).to eq    [false, true]
+    expect(match_maker(true,  true,  true, 0, nil)).to eq       [false, true]
+  end
+end
+
+describe "match_maker" do
+  it "meets the problem requirements" do
+    expect(shared([1,2,3], [1,2,4])).to eq            [{1=>[true, true], 2=>[true, true], 3=>[true, nil], 4=>[nil, true]}, [1, 2]]
+    expect(shared(%w(a b c d), %w(aa b cc d))).to eq  [{"a"=>[true, nil], "b"=>[true, true], "c"=>[true, nil], "d"=>[true, true], "aa"=>[nil, true], "cc"=>[nil, true]}, ["b", "d"]]
+    expect(shared([], [1,2])).to eq                   [{1=>[nil, true], 2=>[nil, true]}, []]
+    expect(shared([1,2], [])).to eq                   [{1=>[true, nil], 2=>[true, nil]}, []]
+    expect(shared([], [])).to eq                      [{}, []]
+    expect(shared([1,2,:c], ['a','b',:c])).to eq      [{1=>[true, nil], 2=>[true, nil], :c=>[true, true], "a"=>[nil, true], "b"=>[nil, true]}, [:c]]
+    expect(shared([1,2,3], [3,2,1])).to eq            [{1=>[true, true], 2=>[true, true], 3=>[true, true]}, [1, 2, 3]]
+  end
+end
