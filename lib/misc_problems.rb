@@ -187,11 +187,49 @@ end
 
 class String
   def intersperse(chr)
-    (0..size).inject([]) { |memo, i| memo << "#{self[0...i]}#{chr}#{self[i..-1]}" }
+    (0..size).map { |i| "#{self[0...i]}#{chr}#{self[i..-1]}" }
   end
 end
 
-def permsol(string)
+def permutations(string)
   return [string] if string.length == 1
-  permsol(string[1..-1]).flat_map { |perm| perm.intersperse(string[0]) }.uniq
+  permutations(string[1..-1]).flat_map { |perm| perm.intersperse(string[0]) }.uniq
+end
+
+# Write a program that will calculate the number of trailing zeros in a factorial of a given number.
+#
+# http://mathworld.wolfram.com/Factorial.html
+#
+# N! = 1 * 2 * 3 * 4 ... N
+#
+# zeros(12) = 2 # 1 * 2 * 3 .. 12 = 479001600
+# that has 2 trailing zeros 4790016(00)
+# Be careful 1000! has length of 2568 digital numbers.
+
+def zeros(n)
+  (1..Math.log(n,5).to_i).inject(0) { |count, pow| count + n/(5**pow) }
+end
+
+# There is a secret string which is unknown to you.
+# Given a collection of random triplets from the string, recover the original string.
+# Example
+# secret_1 = "whatisup"
+# triplets_1 = [
+#   ['t','u','p'],
+#   ['w','h','i'],
+#   ['t','s','u'],
+#   ['a','t','s'],
+#   ['h','a','p'],
+#   ['t','i','s'],
+#   ['w','h','s']
+# ]
+
+# first attempt
+def secret?(perm, triplets)
+  triplets.all? { |triplet| triplet == perm.select { |x| triplet.include?(x) } }
+end
+
+def recover_secret(triplets)
+  chars = triplets.flatten.uniq
+  chars.permutation.find { |perm| secret?(perm, triplets) }.join
 end
