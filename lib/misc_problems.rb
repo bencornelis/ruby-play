@@ -183,6 +183,7 @@ def to_camel_case(str)
   [head, *tail.map(&:capitalize)].join
 end
 
+# Find all unique permutations of a string
 
 class String
   def intersperse(chr)
