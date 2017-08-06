@@ -61,3 +61,136 @@ def two_sum(nums, target)
     lookup[num] = j
   end
 end
+
+# You are given an array strarr of strings and an integer k. Your task is to return the first longest string consisting of k consecutive strings taken in the array.
+
+# Example: longest_consec(["zone", "abigail", "theta", "form", "libe", "zas", "theta", "abigail"], 2) --> "abigailtheta"
+
+# n being the length of the string array, if n = 0 or k > n or k <= 0 return "".
+
+def longest_consec(strarr, k)
+  return "" if strarr == [] || k > strarr.size || k <= 0
+  strarr.each_cons(k).inject("") do |longest, strs|
+    str = strs.join
+    str.length > longest.length ? str : longest
+  end
+end
+
+# Write a method that takes an array of consecutive (increasing) letters as input and that returns the missing letter in the array.
+def find_missing_letter(arr)
+  arr.each_cons(2) do |l1, l2|
+    return (l1.ord+1).chr if l2.ord != l1.ord + 1
+  end
+end
+
+# def find_missing_letter(arr)
+#   ([*arr.first..arr.last] - arr).first
+# end
+
+# sort string of weights first by digit sum, then by string order
+# "56 65 74 100 99 68 86 180 90" ordered by numbers weights becomes: "100 180 90 56 65 74 68 86 99"
+
+def order_weight(strng)
+  strng.split(" ").sort_by do |s|
+    wt = s.split("").map(&:to_i).reduce(:+)
+    [wt, s]
+  end.join(" ")
+end
+
+# The number 89 is the first integer with more than one digit that fulfills the property partially introduced in the title of this kata. What's the use of saying "Eureka"? Because this sum gives the same number.
+#
+# In effect: 89 = 8^1 + 9^2
+#
+# The next number in having this property is 135.
+#
+# See this property again: 135 = 1^1 + 3^2 + 5^3
+#
+# We need a function to collect these numbers, that may receive two integers a, b that defines the range [a, b] (inclusive) and outputs a list of the sorted numbers in the range that fulfills the property described above.
+
+def digits(n)
+  q, r = n.divmod(10)
+  q == 0 ? [r] : [*digits(q), r]
+end
+
+def pow_sum(n)
+  digits(n).each_with_index.inject(0) { |sum, (d, i)| sum + d**(i+1) }
+end
+
+def sum_dig_pow(a, b)
+  [*a..b].select { |n| n == pow_sum(n) }
+end
+
+# The goal of this exercise is to convert a string to a new string where each character in the new string is '(' if that character appears only once in the original string, or ')' if that character appears more than once in the original string. Ignore capitalization when determining if a character is a duplicate.
+#
+# Examples:
+#
+# "din" => "((("
+#
+# "recede" => "()()()"
+#
+# "Success" => ")())())"
+#
+# "(( @" => "))(("
+
+def duplicate_encode(word)
+  counts = word.chars.inject(Hash.new(0)) do |h, c|
+    h[c.downcase] += 1
+    h
+  end
+  word.gsub(/./) { |c| counts[c.downcase] > 1 ? ")" : "(" }
+end
+
+# Implement the function unique_in_order which takes as argument a sequence and returns a list of items without any elements with the same value next to each other and preserving the original order of elements.
+#
+# For example:
+#
+# unique_in_order('AAAABBBCCDAABBB') == ['A', 'B', 'C', 'D', 'A', 'B']
+# unique_in_order('ABBCcAD')         == ['A', 'B', 'C', 'c', 'A', 'D']
+# unique_in_order([1,2,2,3,3])       == [1,2,3]
+
+def unique_in_order(iterable)
+  items = iterable.is_a?(Array) ? iterable : iterable.chars
+  items.inject([]) do |memo, item|
+    item == memo.last ? memo : [*memo, item]
+  end
+end
+
+# just learned about "chunk"
+# def unique_in_order(iterable)
+#   (iterable.is_a?(Array) ? iterable : iterable.chars).chunk {|x| x}.map(&:first)
+# end
+
+# If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
+#
+# Finish the solution so that it returns the sum of all the multiples of 3 or 5 below the number passed in.
+
+def solution(number)
+ (1...number).inject(0) { |sum, k| (k % 3 == 0 || k % 5 == 0) ? sum + k : sum }
+end
+
+# Complete the method/function so that it converts dash/underscore delimited words into camel casing. The first word within the output should be capitalized only if the original word was capitalized.
+#
+# Examples:
+#
+# returns "theStealthWarrior"
+# to_camel_case("the-stealth-warrior")
+#
+# returns "TheStealthWarrior"
+# to_camel_case("The_Stealth_Warrior")
+
+def to_camel_case(str)
+  head, *tail = str.split(/[-_]/)
+  [head, *tail.map(&:capitalize)].join
+end
+
+
+class String
+  def intersperse(chr)
+    (0..size).inject([]) { |memo, i| memo << "#{self[0...i]}#{chr}#{self[i..-1]}" }
+  end
+end
+
+def permsol(string)
+  return [string] if string.length == 1
+  permsol(string[1..-1]).flat_map { |perm| perm.intersperse(string[0]) }.uniq
+end
