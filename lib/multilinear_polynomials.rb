@@ -21,16 +21,16 @@
 # so you won't find something like `-3+yx^2'. Multilinear means in this context: of degree 1 on each variable.
 
 Term = Struct.new(:coeff, :vars) do
+  def nonzero?
+    !coeff.zero?
+  end
+
   def to_s
-    "#{coeff_str}#{vars_str}"
+    "#{coeff_str}#{vars}"
   end
 
   def vars_count
-    vars.size
-  end
-
-  def vars_str
-    vars.join
+    vars.length
   end
 
   def coeff_str
@@ -43,16 +43,18 @@ Term = Struct.new(:coeff, :vars) do
 end
 
 def simplify(poly)
-  join(combine(create_terms(poly)))
+  trim join combine create_terms poly
+end
+
+def trim(poly)
+  poly[0] == "+" ? poly[1..-1] : poly
 end
 
 def join(terms)
-  non_zero = -> term { !term.coeff.zero? }
-  result =
-    terms.select(&non_zero)
-         .sort_by { |term| [term.vars_count, term.vars_str] }
-         .map(&:to_s).join
-  result[0] == "+" ? result[1..-1] : result
+  terms.select(&:nonzero?)
+       .sort_by { |term| [term.vars_count, term.vars] }
+       .map(&:to_s)
+       .join
 end
 
 def combine(terms)
@@ -67,7 +69,7 @@ def create_terms(poly)
     sign   = term[/[+-]/] || "+"
     number = term[/\d+/]  || "1"
     coeff  = "#{sign}#{number}".to_i
-    vars   = term[/[a-z]+/].split("").sort
+    vars   = term[/[a-z]+/].chars.sort.join
     Term.new(coeff, vars)
   end
 end
