@@ -18,6 +18,9 @@ pairs.inject({}) do |h, (k, v)|
   h
 end
 
+# using each_with_object
+pairs.each_with_object({}) { |(k, v), h| h[k] = v }
+
 # get all even integers in array as string
 # using select and map
 nums = [1, 2, 3, 4, 5, 6]
@@ -34,6 +37,11 @@ nums = [1, 2, 3, 4, 5, 6]
 nums.inject({even:[], odd:[]}) do |h, num|
   h[num.even? ? :even : :odd] << num
   h
+end
+
+# using each_with_object
+nums.each_with_object({even:[], odd:[]}) do |num, h|
+  h[num.even? ? :even : :odd] << num
 end
 
 # implement some Enumerable methods using inject instead of each
