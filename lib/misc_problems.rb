@@ -233,3 +233,31 @@ def recover_secret(triplets)
   chars = triplets.flatten.uniq
   chars.permutation.find { |perm| secret?(perm, triplets) }.join
 end
+
+# Create a simple calculator that given a string of operators (+ - * and /)
+# and numbers separated by spaces returns the value of that expression
+#
+# Example:
+#
+# Calculator.new.evaluate("2 / 2 + 3 * 4 - 6") # => 7
+
+class Calculator
+  def evaluate(string)
+    chrs = string.split(/\s/)
+    [/[\*\/]/, /[+-]/].each { |ops| chrs = apply_ops(chrs, ops) }
+    chrs.first
+  end
+
+  private
+  def apply_ops(chrs, ops)
+    chrs.each_with_object([]) do |y, rtn|
+      if rtn.last =~ ops
+        op, x = rtn.pop, rtn.pop
+        x, y = x.to_i, y.to_i
+        rtn << x.send(op, y)
+      else
+        rtn << y
+      end
+    end
+  end
+end
