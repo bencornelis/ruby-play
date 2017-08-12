@@ -261,3 +261,28 @@ class Calculator
     end
   end
 end
+
+# The goal is to implement a simple calculator which uses fluent syntax:
+#
+# Calc.new.one.plus.two              # Should return 3
+# Calc.new.five.minus.six            # Should return -1
+# Calc.new.seven.times.two           # Should return 14
+# Calc.new.nine.divided_by.three     # Should return 3
+# There are only four operations that are supported (plus, minus, times, divided_by) and 10 digits (zero, one, two, three, four, five, six, seven, eight, nine).
+#
+# Each calculation consists of one operation only.
+
+class Calc
+  %i{ zero one two three four five six seven eight nine }.each_with_index do |name, number|
+    define_method(name) { op ? num.send(op, number) : Calc.new(number) }
+  end
+
+  { plus: :+, minus: :-, times: :*, divided_by: :/ }.each do |name, operation|
+    define_method(name) { Calc.new(num, operation) }
+  end
+
+  attr_reader :num, :op
+  def initialize(num = nil, op = nil)
+    @num, @op = num, op
+  end
+end
