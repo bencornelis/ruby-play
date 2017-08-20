@@ -286,3 +286,43 @@ class Calc
     @num, @op = num, op
   end
 end
+
+# Sort the elements in a matrix and snake them down-up through the columns
+# i.e turn this
+[[1, -1,  4, 1],
+ [7,-20, 12, 0],
+ [8, 10, -4,-3]]
+#
+# into this
+# [[-20,  1, 1, 12],
+#  [ -4,  0, 4, 10],
+#  [ -3, -1, 7,  8]]
+
+def up_down_col_sort(matrix)
+  matrix
+    .flatten.sort
+    .each_slice(matrix.size)
+    .map.with_index { |col, idx| idx.even? ? col : col.reverse }
+    .transpose
+end
+
+# Create a function hollow_triangle(height) that returns a hollow triangle of the correct height.
+# The height is passed through to the function and the function should return a list containing each line of the hollow triangle.
+# hollow_triangle(6) will result in:
+# _____#_____              1
+# ____#_#____              2
+# ___#___#___              3
+# __#_____#__              4
+# _#_______#_              5
+# ###########              6 ---- Final Height
+
+def hollow_triangle(n)
+  return ['#'] if n == 1
+  width = 1 + 2*(n-1)
+  first_row, last_row  = '#'.center(width, '_'), '#'*width
+  middle_rows =
+    (1..width-4).step(2).each_with_object([]) { |fill_length, triangle|
+      triangle << "##{'_'*fill_length}#".center(width, '_') }
+
+  [first_row, *middle_rows, last_row]
+end
