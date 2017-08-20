@@ -289,9 +289,9 @@ end
 
 # Sort the elements in a matrix and snake them down-up through the columns
 # i.e turn this
-[[1, -1,  4, 1],
- [7,-20, 12, 0],
- [8, 10, -4,-3]]
+# [[1, -1,  4, 1],
+#  [7,-20, 12, 0],
+#  [8, 10, -4,-3]]
 #
 # into this
 # [[-20,  1, 1, 12],
