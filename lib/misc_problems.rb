@@ -326,3 +326,27 @@ def hollow_triangle(n)
 
   [first_row, *middle_rows, last_row]
 end
+
+# translate number of seconds to sentence
+def format_duration(seconds)
+  def pluralize(number, word)
+    word = number == 1 ? word : "#{word}s"
+    "#{number} #{word}"
+  end
+
+  def sentence(strs)
+    return strs.first if strs.one?
+    "#{strs[0...-1].join(', ')} and #{strs.last}"
+  end
+
+  return 'now' if seconds.zero?
+
+  units = %w(year day hour minute second)
+  secs  = [365*24*60*60, 24*60*60, 60*60, 60, 1]
+  unit_phrases = units.zip(secs).each_with_object([]) do |(unit, sec_in_unit), strs|
+    units_in_sec, seconds = seconds.divmod(sec_in_unit)
+    strs << pluralize(units_in_sec, unit) unless units_in_sec.zero?
+  end
+
+  sentence(unit_phrases)
+end
