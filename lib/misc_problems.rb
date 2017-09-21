@@ -350,3 +350,8 @@ def format_duration(seconds)
 
   sentence(unit_phrases)
 end
+
+def flatten(arr)
+  return arr unless arr.is_a? Array
+  arr.inject([]) { |memo, x| [*memo, *flatten(x)] }
+end
