@@ -11,13 +11,12 @@ def spiral(n)
   grid = Array.new(grid_size) { Array.new(grid_size, ' ') }
   x = y = grid_size/2
 
-  grid[y][x] = FILL
-  (1..n-1).each do |k|
+  (1..n).each do |k|
     move = MOVES[(k - 1) % 4]
     k.times do
+      grid[y][x] = FILL
       x += move.first
       y += move.last
-      grid[y][x] = FILL
     end
   end
 
